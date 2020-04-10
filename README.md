@@ -1,8 +1,8 @@
-# Historique téléphonique OVH
+# OVH Telephony history
 
 ## Installation
 
-Dépendances :
+Dependance :
 
 ```bash
 sudo aptitude install php php-json php-curl
