@@ -107,7 +107,7 @@ krsort($calls);
                     <td><?php echo $call['dateObject']->format('d/m/Y H:m:s') ?></td>
                     <td><?php echo ($call['callerName']) ? $call['callerName'] : "<span class='text-muted'>Inconnu</span>" ?></td>
                     <td><a href="callto:<?php echo formatPhoneCall($call['callerPhone']) ?>"><?php echo formatPhone($call['callerPhone']) ?></a></td>
-                    <td><?php echo $call['statusText'] ?><?php if ($call['status'] == 'RECU'): ?> <small class="text-muted">par <?php echo ($call['calledName']) ? $call['calledName'] : formatPhone($call['callerPhone']) ?></small><?php endif; ?></td>
+                    <td><?php echo $call['statusText'] ?><?php if ($call['status'] == 'RECU'): ?> <small class="text-muted">par <?php echo ($call['calledName']) ? $call['calledName'] : formatPhone($call['calledPhone']) ?></small><?php endif; ?></td>
                     <td class="text-right"><?php if($call['duration']): ?><?php echo $call['durationMin'] ?>&nbsp;<small class=text-muted>min</small> <?php echo sprintf("%02d", $call['durationSec']) ?>&nbsp;<small class=text-muted>sec</small><?php endif; ?></td>
                 </tr>
                 <?php endforeach; ?>
