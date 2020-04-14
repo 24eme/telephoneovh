@@ -105,7 +105,7 @@ krsort($calls);
                 <?php foreach($calls as $call): ?>
                 <tr>
                     <td><?php echo $call['dateObject']->format('d/m/Y H:m:s') ?></td>
-                    <td><?php echo ($call['callerName']) ? $call['callerName'] : "<span class='text-muted'>Inconnu</span>" ?></td>
+                    <td><?php echo ($call['callerName']) ? $call['callerName'] : "<span class='text-muted'>Inconnu</span> <a href=\"https://www.ovhtelecom.fr/manager/#/telephony/".$account."/phonebook\" target=\"_blank\"><small>(Définir)</small></a>" ?></td>
                     <td><a href="callto:<?php echo formatPhoneCall($call['callerPhone']) ?>"><?php echo formatPhone($call['callerPhone']) ?></a></td>
                     <td><?php echo $call['statusText'] ?><?php if ($call['status'] == 'RECU'): ?> <small class="text-muted">par <?php echo ($call['calledName']) ? $call['calledName'] : formatPhone($call['calledPhone']) ?></small><?php endif; ?></td>
                     <td class="text-right"><?php if($call['duration']): ?><?php echo $call['durationMin'] ?>&nbsp;<small class=text-muted>min</small> <?php echo sprintf("%02d", $call['durationSec']) ?>&nbsp;<small class=text-muted>sec</small><?php endif; ?></td>
