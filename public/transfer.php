@@ -23,4 +23,4 @@ if($transferNumber) {
     ));
 }
 
-header('Location: /');
+header('Location: index.php');
