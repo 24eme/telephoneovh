@@ -1,5 +1,14 @@
 <?php
 
+use \Ovh\Api;
+
+function getApi($config) {
+    return new Api($config['ovhApplicationKey'],
+                   $config['ovhApplicationSecret'],
+                   $config['ovhEndpoint'],
+                   $config['ovhConsumerKey']);
+}
+
 function resolvePhoneName($phone, $phones) {
     if(!$phone || !isset($phones[$phone])) {
 
@@ -17,7 +26,7 @@ function formatPhone($phone) {
     return $phone;
 }
 
-function formatPhoneCall($phone) {
+function formatPhoneCallTo($phone) {
     $phone = preg_replace('/^00([0-9]+)/', '+\1', $phone);
 
     return $phone;
