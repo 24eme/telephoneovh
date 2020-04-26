@@ -23,6 +23,8 @@ foreach($api->get('/telephony/'.$account.'/phonebook') as $phoneBook) {
     }
 }
 
+asort($phones);
+
 $ids = $api->get('/telephony/'.$account.'/service/'.$service.'/voiceConsumption');
 rsort($ids);
 foreach($ids as $id) {
@@ -98,19 +100,49 @@ foreach($phones as $phone => $name) {
 </head>
 <body>
     <div class="container" style="margin-top: 20px;">
-
-        <form id="formTransfert" action="transfer.php" class="form-inline" style="margin-bottom: 20px;">
-            <div class="custom-control custom-switch my-1 mr-sm-2">
-              <input id="transfertActive" type="checkbox" class="custom-control-input" <?php if($transferNumber): ?>checked="checked"<?php else: ?>disabled<?php endif; ?>>
-              <label class="custom-control-label" for="transfertActive">Transfert des appels</label>
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-9">
+            <form id="formTransfert" action="transfer.php" class="form-inline">
+                <div class="custom-control custom-switch my-1 mr-sm-2">
+                  <input id="transfertActive" type="checkbox" class="custom-control-input" <?php if($transferNumber): ?>checked="checked"<?php else: ?>disabled<?php endif; ?>>
+                  <label class="custom-control-label" for="transfertActive">Transfert des appels</label>
+                </div>
+                <select name="phone" class="custom-select my-1 mr-sm-2" id="transfertNumberChoice">
+                    <option value="">Désactivé</option>
+                    <?php foreach($tranfertPhoneBook as $phone => $name): ?>
+                    <option value="<?php echo $phone ?>" <?php if($transferNumber == $phone): ?>selected<?php endif; ?>><?php echo $name ?> - <?php echo formatPhone($phone) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </form>
             </div>
-            <select name="phone" class="custom-select my-1 mr-sm-2" id="transfertNumberChoice">
-                <option value="">Désactivé</option>
-                <?php foreach($tranfertPhoneBook as $phone => $name): ?>
-                <option value="<?php echo $phone ?>" <?php if($transferNumber == $phone): ?>selected<?php endif; ?>><?php echo $name ?> - <?php echo formatPhone($phone) ?></option>
-                <?php endforeach; ?>
-            </select>
-        </form>
+            <div class="col-3 text-right">
+                <button type="button" class="btn btn-info my-1" data-toggle="modal" data-target="#modalPhoneBook">Carnet de contacts</button>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalPhoneBook" tabindex="-1" role="dialog" aria-labelledby="modalPhoneBookLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalPhoneBookLabel">Carnet de contacts</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                        <ul class="list-group list-group-flush">
+                            <?php foreach($phones as $phone => $name): ?>
+                             <li class="list-group-item d-flex justify-content-between align-items-center"><?php echo $name ?> <span><?php echo formatPhone($phone) ?></span></li>
+                        <?php endforeach; ?>
+                        </ul>
+                  </div>
+                  <!--<div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>-->
+                </div>
+            </div>
+        </div>
 
         <a class="float-right btn btn-sm btn-link" href="index.php?format=xml">Feed</a>
         <h2 style="margin-bottom: 20px;">Historique des <?php echo $nbCalls ?> derniers appels</h2>
@@ -138,6 +170,8 @@ foreach($phones as $phone => $name) {
             </tbody>
         </table>
     </body>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script type="text/javascript">
         document.querySelector('#transfertNumberChoice').onchange = function() {
             document.querySelector('#formTransfert').submit();
