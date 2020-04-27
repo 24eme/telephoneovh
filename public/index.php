@@ -130,11 +130,16 @@ foreach($phones as $phone => $name) {
                     </button>
                   </div>
                   <div class="modal-body">
-                        <ul class="list-group list-group-flush">
+                        <input type="text" id="searchPhoneBook" class="form-control input-lg" value="" placeholder="Rechercher un contact" style="margin-bottom: 15px;" />
+                        <table id="listPhoneBook" class="table">
                             <?php foreach($phones as $phone => $name): ?>
-                             <li class="list-group-item d-flex justify-content-between align-items-center"><?php echo $name ?> <span><?php echo formatPhone($phone) ?></span></li>
-                        <?php endforeach; ?>
-                        </ul>
+                                <tr>
+                                    <td><?php echo preg_replace('/^(.+) \(.+\)$/', '\1', $name) ?></td>
+                                    <td><?php echo preg_replace('/^.+\((.+)\)$/', '\1', $name) ?></td>
+                                    <td><?php echo formatPhone($phone) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </table>
                   </div>
                   <!--<div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -180,6 +185,33 @@ foreach($phones as $phone => $name) {
             document.querySelector('#transfertNumberChoice').value = "";
             document.querySelector('#transfertNumberChoice').onchange();
         };
+
+        document.querySelector('#searchPhoneBook').onkeyup = function() {
+            var lines = document.querySelectorAll('#listPhoneBook tr');
+            var terms = this.value.split(' ');
+            lines.forEach(function(line, index) {
+                var words = line.innerText;
+
+                for(keyTerm in terms) {
+                    var termRegexp = new RegExp(terms[keyTerm], 'i');
+                    if(words.search(termRegexp) < 0) {
+                        line.classList.add("d-none");
+                        return;
+                    }
+                }
+
+                line.classList.remove("d-none");
+            });
+        }
+        $('#modalPhoneBook').on('shown.bs.modal', function (e) {
+            document.querySelector('#searchPhoneBook').focus();
+        })
+        $('#modalPhoneBook').on('hidden.bs.modal', function (e) {
+            document.querySelector('#searchPhoneBook').value = "";
+            document.querySelectorAll('#listPhoneBook tr').forEach(function(line, index) {
+                line.classList.remove("d-none");
+            });
+        })
     </script>
 </html>
 <?php endif; ?>
