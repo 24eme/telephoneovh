@@ -116,7 +116,7 @@ foreach($phones as $phone => $name) {
             </form>
             </div>
             <div class="col-3 text-right">
-                <button type="button" class="btn btn-info my-1" data-toggle="modal" data-target="#modalPhoneBook">Carnet de contacts</button>
+                <button type="button" autofocus=autofocus class="btn btn-info my-1" data-toggle="modal" data-target="#modalPhoneBook">Carnet de contacts</button>
             </div>
         </div>
 
