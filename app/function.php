@@ -18,15 +18,19 @@ function resolvePhoneName($phone, $phones) {
     return $phones[$phone];
 }
 
-function formatPhone($phone) {
+function formatPhone($phone, $html = false) {
     $phone = preg_replace('/^0033/', '', $phone);
     $phone = preg_replace('/^([0-9]+)/', '0\1', $phone);
-    $phone = preg_replace('/([0-9]{2})/', '\1 ', $phone);
+    $phone = preg_replace('/([0-9]{2})/', '\1&nbsp;', $phone);
 
     return $phone;
 }
 
 function formatPhoneCallTo($phone) {
+    if(preg_match('/anonymous/', $phone)) {
+        return null;
+    }
+
     $phone = preg_replace('/^00([0-9]+)/', '+\1', $phone);
 
     return $phone;
