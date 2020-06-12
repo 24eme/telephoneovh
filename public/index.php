@@ -165,7 +165,7 @@ foreach($phones as $phone => $name) {
             <tbody>
                 <?php foreach($calls as $call): ?>
                 <tr>
-                    <td><?php echo $call['dateObject']->format('d/m/Y H:m:s') ?></td>
+                    <td><?php echo $call['dateObject']->format('d/m/Y H:i:s') ?></td>
                     <td><?php echo ($call['callerName']) ? $call['callerName'] : "<span class='text-muted'>Inconnu</span> <a href=\"https://www.ovhtelecom.fr/manager/#/telephony/".$account."/phonebook\" target=\"_blank\"><small>(Définir)</small></a>" ?></td>
                     <td><a href="callto:<?php echo formatPhoneCallTo($call['callerPhone']) ?>"><?php echo formatPhone($call['callerPhone'], true) ?></a></td>
                     <td><?php echo $call['statusText'] ?><?php if ($call['calledPhone']): ?> <small class="text-muted">par <?php echo ($call['calledName']) ? $call['calledName'] : formatPhone($call['calledPhone'], true) ?></small><?php endif; ?></td>
