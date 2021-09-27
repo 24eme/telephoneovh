@@ -6,6 +6,8 @@ Interface web qui permet gérer les appels d'une ligne voip chez ovh :
 - Changer le transfert d'appel
 - Consulter l'Annuaire téléphonique
 
+![Capture d'écran des fonctionnalités](doc/telephoneovh_fonctionnalites.gif)
+
 ## Installation
 
 Dependances :
