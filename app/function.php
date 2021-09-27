@@ -19,9 +19,9 @@ function resolvePhoneName($phone, $phones) {
 }
 
 function formatPhone($phone, $html = false) {
-    $phone = preg_replace('/^0033/', '', $phone);
-    $phone = preg_replace('/^([0-9]+)/', '0\1', $phone);
+    $phone = preg_replace('/^0033/', '0', $phone);
     $phone = preg_replace('/([0-9]{2})/', '\1&nbsp;', $phone);
+    $phone = preg_replace('/^0([^0-9])/', '\1', $phone);
 
     return $phone;
 }

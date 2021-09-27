@@ -1,5 +1,11 @@
 # Historique téléphonique OVH
 
+Interface web qui permet gérer les appels d'une ligne voip chez ovh :
+
+- Consulter l'historique des 30 derniers appels
+- Changer le transfert d'appel
+- Consulter l'Annuaire téléphonique
+
 ## Installation
 
 Dependances :
