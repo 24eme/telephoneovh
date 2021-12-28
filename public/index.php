@@ -146,7 +146,7 @@ foreach($phones as $phone => $name) {
                                 <tr>
                                     <td><?php echo preg_replace('/^(.+) \(.+\)$/', '\1', $name) ?></td>
                                     <td><?php echo preg_replace('/^.+\((.+)\)$/', '\1', $name) ?></td>
-                                    <td class="text-right"><a href="tel:<?php echo formatPhoneCallTo($call['callerPhone']) ?>"><?php echo formatPhone($phone, true) ?></a></td>
+                                    <td class="text-right"><a href="tel:<?php echo formatPhoneCallTo($phone) ?>"><?php echo formatPhone($phone, true) ?></a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </table>
