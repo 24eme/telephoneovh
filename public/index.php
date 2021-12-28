@@ -10,15 +10,25 @@ $service = $config['ovhService'];
 $api = getApi($config);
 
 foreach($api->get('/telephony/'.$account.'/phonebook') as $phoneBook) {
-    $ids = $api->get('/telephony/'.$account.'/phonebook/'.$phoneBook.'/phonebookContact');
-    foreach($ids as $id) {
-        $contact = $api->get('/telephony/'.$account.'/phonebook/'.$phoneBook.'/phonebookContact/'.$id);
-        foreach($contact as $key => $phone) {
-            if(!preg_match("/(Phone|Mobile)/", $key) || !$phone) {
-                continue;
-            }
+    $export = $api->get('/telephony/'.$account.'/phonebook/'.$phoneBook.'/export', array('format' => 'csv'));
 
-            $phones[$phone] = $contact['name'].' '.$contact['surname'].' ('.$contact['group'].')';
+    foreach(explode("\n", file_get_contents($export['url'])) as $line) {
+        $data = str_getcsv($line, ";");
+        if(!isset($data[2]) || !$data[2] || $data[2] == 'name') {
+            continue;
+        }
+        $name = $data[2]." ".$data[1]. " (".$data[0].")";
+        if($data[3]) {
+            $phones[$data[3]] = $name;
+        }
+        if($data[4]) {
+            $phones[$data[4]] = $name;
+        }
+        if($data[5]) {
+            $phones[$data[5]] = $name;
+        }
+        if($data[6]) {
+            $phones[$data[6]] = $name;
         }
     }
 }
