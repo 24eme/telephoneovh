@@ -74,21 +74,16 @@ foreach($phones as $phone => $name) {
 ?>
 <?php if($format == "xml"): ?>
 <?php header('Content-Type: text/xml'); ?>
+<?php $link = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : 'http').'://'.$_SERVER['HTTP_HOST'].preg_replace('|/[^/]*$|', '/', $_SERVER['REQUEST_URI']); ?>
 <?xml version="1.0" encoding="utf-8"?>
 
 <feed xmlns="http://www.w3.org/2005/Atom">
 	<title>Historique des derniers appels</title>
-	<subtitle></subtitle>
-	<link href="http://example.org/feed/" rel="self" />
-	<link href="http://example.org/" />
-	<id></id>
-	<updated><?php echo current($calls)['date'] ?></updated>
-
     <?php foreach($calls as $call): ?>
     <entry>
 		<title>Appel <?php echo $call['statusText'] ?> <?php echo ($call['status'] == 'EMIS') ? 'vers' : 'de' ?> <?php echo (isset($call['callerName'])) ? $call['callerName'] : formatPhoneCallTo($call['callerPhone']) ?><?php if($call['duration']): ?> d'une durée de <?php echo $call['durationMin'] ?> min et <?php echo $call['durationSec'] ?> sec<?php endif; ?></title>
-		<link href="" />
-	<id><?php echo $call['id'] ?></id>
+		<link href="<?php echo $link ?>" />
+	    <id><?php echo $call['id'] ?></id>
 		<updated><?php echo $call['date'] ?></updated>
 		<author>
 			<name><?php echo $call['callerName'] ?></name>
