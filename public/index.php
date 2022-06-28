@@ -86,7 +86,7 @@ foreach($phones as $phone => $name) {
 
     <?php foreach($calls as $call): ?>
     <entry>
-		<title>Appel <?php echo $call['statusText'] ?> <?php echo (isset($call['callerName'])) ? "de ".$call['callerName'] : "du ".formatPhoneCallTo($call['callerPhone']) ?><?php if($call['duration']): ?> d'une durée de <?php echo $call['durationMin'] ?> min et <?php echo $call['durationSec'] ?> sec<?php endif; ?></title>
+		<title>Appel <?php echo $call['statusText'] ?> <?php echo ($call['status'] == 'EMIS') ? 'vers' : 'de' ?> <?php echo (isset($call['callerName'])) ? $call['callerName'] : formatPhoneCallTo($call['callerPhone']) ?><?php if($call['duration']): ?> d'une durée de <?php echo $call['durationMin'] ?> min et <?php echo $call['durationSec'] ?> sec<?php endif; ?></title>
 		<link href="" />
 	<id><?php echo $call['id'] ?></id>
 		<updated><?php echo $call['date'] ?></updated>
