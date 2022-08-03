@@ -75,7 +75,7 @@ function buildCall($dataCall, $phones) {
         $call['calledPhone'] = $dataCall['called'];
     }
 
-    if(!$dataCall['duration']) {
+    if($dataCall['wayType'] == 'incoming' && !$dataCall['duration']) {
         $call['status'] = 'MANQUE';
         $call['statusText'] = 'Manqué';
         $call['calledPhone'] = null;
