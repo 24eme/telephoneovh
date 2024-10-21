@@ -3,6 +3,9 @@ require __DIR__ . '/../app/app.php';
 
 $format = isset($_GET['format']) ? $_GET['format'] : 'html';
 $nbCalls = $config['nbHistory'];
+if (isset($_GET['nbCalls'])) {
+    $nbCalls = $_GET['nbCalls'];
+}
 $phones = array();
 $calls = array();
 $account = $config['ovhAccount'];
