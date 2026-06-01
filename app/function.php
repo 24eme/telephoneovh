@@ -86,3 +86,57 @@ function buildCall($dataCall, $phones) {
 
     return $call;
 }
+
+function getPhoneBookCsv($api, $config, $expiration = null) {
+  $csvFile = __DIR__ . '/../cache/phonebook.csv';
+  @mkdir(preg_replace("|/[^/]*$|", "", $csvFile), 0777, true);
+
+  if(!is_null($expiration) && is_file($csvFile) && (time() - filemtime($csvFile)) > $expiration) {
+    unlink($csvFile);
+  }
+
+  if(!is_file($csvFile)) {
+    $csvPhoneBooks = null;
+    foreach($api->get('/telephony/'.$config['ovhAccount'].'/phonebook') as $phoneBook) {
+      $export = $api->get('/telephony/'.$config['ovhAccount'].'/phonebook/'.$phoneBook.'/export', array('format' => 'csv'));
+      if(!isset($export['url']) || !$export['url']) {
+        continue;
+      }
+      $csvPhoneBooks .= file_get_contents($export['url']);
+    }
+
+    if($csvPhoneBooks) {
+      file_put_contents($csvFile, $csvPhoneBooks);
+    }
+  }
+
+  return file_get_contents($csvFile);
+}
+
+function getCallJson($api, $config, $id, $previous = false) {
+    $jsonFile = __DIR__ . '/../cache/calls/'.$id.'.json';
+    @mkdir(preg_replace("|/[^/]*$|", "", $jsonFile), 0777, true);
+    if(!is_file($jsonFile)) {
+
+      file_put_contents($jsonFile, json_encode($api->get('/telephony/'.$config['ovhAccount'].'/service/'.$config['ovhService'].'/'.($previous ? 'previousVoiceConsumption' : 'voiceConsumption').'/'.$id)));
+    }
+
+    return json_decode(file_get_contents($jsonFile), true);
+}
+
+function getVoiceConsumption($api, $config, $previous = false, $expiration = null) {
+  $apiMethodName = ($previous ? 'previousVoiceConsumption' : 'voiceConsumption');
+  $jsonFile = __DIR__ . '/../cache/'.$apiMethodName.'.json';
+  @mkdir(preg_replace("|/[^/]*$|", "", $jsonFile), 0777, true);
+
+  if(!is_null($expiration) && is_file($jsonFile) && (time() - filemtime($jsonFile)) > $expiration) {
+
+    unlink($jsonFile);
+  }
+
+  if(!is_file($jsonFile)) {
+    file_put_contents($jsonFile, json_encode($api->get('/telephony/'.$config['ovhAccount'].'/service/'.$config['ovhService'].'/'.$apiMethodName)));
+  }
+
+  return json_decode(file_get_contents($jsonFile), true);
+}

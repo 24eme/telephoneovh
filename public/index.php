@@ -6,56 +6,55 @@ $nbCalls = $config['nbHistory'];
 if (isset($_GET['nbCalls'])) {
     $nbCalls = $_GET['nbCalls'];
 }
+$cache = true;
+if (isset($_GET['cache'])) {
+    $cache = false;
+}
 $phones = array();
 $calls = array();
 $account = $config['ovhAccount'];
 $service = $config['ovhService'];
 $api = getApi($config);
 
-foreach($api->get('/telephony/'.$account.'/phonebook') as $phoneBook) {
-    $export = $api->get('/telephony/'.$account.'/phonebook/'.$phoneBook.'/export', array('format' => 'csv'));
-
-    foreach(explode("\n", file_get_contents($export['url'])) as $line) {
-        $data = str_getcsv($line, ";");
-        if(!isset($data[2]) || !$data[2] || $data[2] == 'name') {
-            continue;
-        }
-        $name = $data[2]." ".$data[1]. " (".$data[0].")";
-        if($data[3]) {
-            $phones[$data[3]] = $name;
-        }
-        if($data[4]) {
-            $phones[$data[4]] = $name;
-        }
-        if($data[5]) {
-            $phones[$data[5]] = $name;
-        }
-        if($data[6]) {
-            $phones[$data[6]] = $name;
-        }
+foreach(explode("\n", getPhoneBookCsv($api, $config, ($cache) ? 86400 * 7 : 0 /* 1 semaine de cache */)) as $line) {
+    $data = str_getcsv($line, ";");
+    if(!isset($data[2]) || !$data[2] || $data[2] == 'name') {
+        continue;
+    }
+    $name = $data[2]." ".$data[1]. " (".$data[0].")";
+    if($data[3]) {
+        $phones[$data[3]] = $name;
+    }
+    if($data[4]) {
+        $phones[$data[4]] = $name;
+    }
+    if($data[5]) {
+        $phones[$data[5]] = $name;
+    }
+    if($data[6]) {
+        $phones[$data[6]] = $name;
     }
 }
 
 asort($phones);
-
-$ids = $api->get('/telephony/'.$account.'/service/'.$service.'/voiceConsumption');
+$ids = getVoiceConsumption($api, $config, false, ($cache) ? 60 : 0 /* 1 minute de cache */);
 rsort($ids);
 foreach($ids as $id) {
     if(count($calls) >= $nbCalls) {
         break;
     }
-    $call = buildCall($api->get('/telephony/'.$account.'/service/'.$service.'/voiceConsumption/'.$id), $phones);
+    $call = buildCall(getCallJson($api, $config, $id), $phones);
     $calls[$call['date'].$id] = $call;
 }
 
-$ids = $api->get('/telephony/'.$account.'/service/'.$service.'/previousVoiceConsumption');
+$ids = getVoiceConsumption($api, $config, true, ($cache) ? 86400 : 0  /* 1 jour de cache */);
 rsort($ids);
 foreach($ids as $id) {
     if(count($calls) >= $nbCalls) {
         break;
     }
-    $call = buildCall($api->get('/telephony/'.$account.'/service/'.$service.'/previousVoiceConsumption/'.$id), $phones);
-    $calls[$call['date'].$id] = $call;
+    $call = buildCall(getCallJson($api, $config, $id, true), $phones);
+    $calls[$call['date'].$id]  = $call;
 }
 
 krsort($calls);
