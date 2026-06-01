@@ -36,7 +36,7 @@ function formatPhoneCallTo($phone) {
     return $phone;
 }
 
-function buildCall($dataCall, $phones) {
+function buildCall($dataCall, $phones, $config) {
     $call = array();
     $call['data'] = $dataCall;
     $call['id'] = md5($dataCall['consumptionId']);
@@ -53,6 +53,7 @@ function buildCall($dataCall, $phones) {
     $call['calledPhone'] = null;
     $call['calledPhoneFormat'] = null;
     $call['calledName'] = null;
+    $call['color'] = null;
 
     if($dataCall['wayType'] == 'incoming') {
         $call['status'] = 'RECU';
@@ -81,12 +82,25 @@ function buildCall($dataCall, $phones) {
     if($dataCall['wayType'] == 'incoming' && !$dataCall['duration']) {
         $call['status'] = 'MANQUE';
         $call['statusText'] = 'Manqué';
-        $call['icon'] = 'bi bi-telephone-x-fill text-danger';
+        $call['icon'] = 'bi bi-telephone-x-fill';
         $call['calledPhone'] = null;
+        $call['color'] = 'text-danger';
+    }
+
+    if($call['calledPhone'] == $config['voiceMailNumber']) {
+      $call['icon'] = 'bi bi-voicemail';
+      $call['status'] = 'VOICEMAIL';
+      $call['statusText'] = 'Manqué';
+      $call['statusTextInfo'] = "reçu par le répondeur";
+      $call['color'] = 'text-danger';
     }
 
     $call['callerName'] = resolvePhoneName($call['callerPhone'], $phones);
     $call['calledName'] = resolvePhoneName($call['calledPhone'], $phones);
+
+    if(!isset($call['statusTextInfo']) && $call['calledPhone']) {
+      $call['statusTextInfo'] = "par ".(($call['calledName']) ? $call['calledName'] : formatPhone($call['calledPhone'], true));
+    }
 
     return $call;
 }

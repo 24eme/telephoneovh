@@ -43,7 +43,7 @@ foreach($ids as $id) {
     if(count($calls) >= $nbCalls) {
         break;
     }
-    $call = buildCall(getCallJson($api, $config, $id), $phones);
+    $call = buildCall(getCallJson($api, $config, $id), $phones, $config);
     $calls[$call['date'].$id] = $call;
 }
 
@@ -53,7 +53,7 @@ foreach($ids as $id) {
     if(count($calls) >= $nbCalls) {
         break;
     }
-    $call = buildCall(getCallJson($api, $config, $id, true), $phones);
+    $call = buildCall(getCallJson($api, $config, $id, true), $phones, $config);
     $calls[$call['date'].$id]  = $call;
 }
 
@@ -160,7 +160,7 @@ if(!$cache) {
 
         <a class="float-right btn btn-sm text-muted" href="index.php?format=xml" title="Flux RSS"><i class="bi bi-rss-fill"></i></a>
         <a class="btn btn-link btn-sm text-muted float-right" href="?cache=reload" title="Recharger le cache"><i class="bi bi-arrow-repeat"></i></a>
-        <h2 style="margin-bottom: 20px;">Historique des <?php echo $nbCalls ?> derniers appels</h2>
+        <h2 style="margin-bottom: 20px;" class="h3">Historique des <?php echo $nbCalls ?> derniers appels</h2>
 
         <table class="table table-striped table-bordered table-sm">
             <thead>
@@ -178,7 +178,7 @@ if(!$cache) {
                     <td><?php echo $call['dateObject']->format('d/m/Y H:i:s') ?></td>
                     <td><?php echo ($call['callerName']) ? $call['callerName'] : "<span class='text-muted'>Inconnu</span> <a href=\"https://www.ovhtelecom.fr/manager/#/telecom/telephony/".$account."/phonebook\" target=\"_blank\"><small>(Définir)</small></a>" ?></td>
                     <td><a href="tel:<?php echo formatPhoneCallTo($call['callerPhone']) ?>"><?php echo formatPhone($call['callerPhone'], true) ?></a></td>
-                    <td><?php echo $call['statusText'] ?><?php if ($call['calledPhone']): ?> <small class="text-muted">par <?php echo ($call['calledName']) ? $call['calledName'] : formatPhone($call['calledPhone'], true) ?></small><?php endif; ?> <i class="<?php echo $call['icon']; ?> float-right"></i></td>
+                    <td class="<?php echo $call['color'] ?>"><?php echo $call['statusText'] ?> <?php if ($call['statusTextInfo']): ?><small class="text-muted"><?php echo $call['statusTextInfo'] ?></small><?php endif; ?> <i class="<?php echo $call['icon']; ?> float-right"></i></td>
                     <td class="text-right"><?php if($call['duration']): ?><?php echo $call['durationMin'] ?>&nbsp;<small class=text-muted>min</small> <?php echo sprintf("%02d", $call['durationSec']) ?>&nbsp;<small class=text-muted>sec</small><?php endif; ?></td>
                 </tr>
                 <?php endforeach; ?>
