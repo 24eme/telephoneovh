@@ -57,6 +57,7 @@ function buildCall($dataCall, $phones) {
     if($dataCall['wayType'] == 'incoming') {
         $call['status'] = 'RECU';
         $call['statusText'] = 'Reçu';
+        $call['icon'] = 'bi bi-telephone-inbound';
         $call['callerPhone'] = $dataCall['calling'];
         $call['calledPhone'] = $dataCall['called'];
     }
@@ -64,6 +65,7 @@ function buildCall($dataCall, $phones) {
     if($dataCall['wayType'] == 'outgoing') {
         $call['status'] = 'EMIS';
         $call['statusText'] = 'Émis';
+        $call['icon'] = 'bi bi-telephone-outbound-fill';
         $call['callerPhone'] = isset($dataCall['dialed']) ? $dataCall['dialed'] : null;
         $call['calledPhone'] = $dataCall['calling'];
     }
@@ -71,6 +73,7 @@ function buildCall($dataCall, $phones) {
     if($dataCall['wayType'] == 'transfer') {
         $call['status'] = 'RECU';
         $call['statusText'] = 'Reçu';
+        $call['icon'] = 'bi bi-telephone-inbound';
         $call['callerPhone'] = $dataCall['calling'];
         $call['calledPhone'] = $dataCall['called'];
     }
@@ -78,6 +81,7 @@ function buildCall($dataCall, $phones) {
     if($dataCall['wayType'] == 'incoming' && !$dataCall['duration']) {
         $call['status'] = 'MANQUE';
         $call['statusText'] = 'Manqué';
+        $call['icon'] = 'bi bi-telephone-x-fill text-danger';
         $call['calledPhone'] = null;
     }
 

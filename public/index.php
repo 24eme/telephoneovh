@@ -129,8 +129,7 @@ if(!$cache) {
             </form>
             </div>
             <div class="col-3 text-right">
-                <a class="btn btn-link btn-sm text-info" href="?cache=reload" title="Recharger le cache"><i class="bi bi-arrow-clockwise"></i></a>
-                <button type="button" autofocus=autofocus class="btn btn-info my-1" data-toggle="modal" data-target="#modalPhoneBook">Carnet de contacts</button>
+                <button type="button" autofocus=autofocus class="btn btn-info my-1" data-toggle="modal" data-target="#modalPhoneBook"><i class="bi bi-people-fill"></i> Carnet de contacts</button>
             </div>
         </div>
 
@@ -138,7 +137,7 @@ if(!$cache) {
             <div class="modal-dialog modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="modalPhoneBookLabel">Carnet de contacts</h5>
+                    <h5 class="modal-title" id="modalPhoneBookLabel"><i class="bi bi-people-fill"></i> Carnet de contacts</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -155,15 +154,12 @@ if(!$cache) {
                             <?php endforeach; ?>
                         </table>
                   </div>
-                  <!--<div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>-->
                 </div>
             </div>
         </div>
 
-        <a class="float-right btn btn-sm btn-link" href="index.php?format=xml">Feed</a>
+        <a class="float-right btn btn-sm text-muted" href="index.php?format=xml" title="Flux RSS"><i class="bi bi-rss-fill"></i></a>
+        <a class="btn btn-link btn-sm text-muted float-right" href="?cache=reload" title="Recharger le cache"><i class="bi bi-arrow-repeat"></i></a>
         <h2 style="margin-bottom: 20px;">Historique des <?php echo $nbCalls ?> derniers appels</h2>
 
         <table class="table table-striped table-bordered table-sm">
@@ -182,7 +178,7 @@ if(!$cache) {
                     <td><?php echo $call['dateObject']->format('d/m/Y H:i:s') ?></td>
                     <td><?php echo ($call['callerName']) ? $call['callerName'] : "<span class='text-muted'>Inconnu</span> <a href=\"https://www.ovhtelecom.fr/manager/#/telecom/telephony/".$account."/phonebook\" target=\"_blank\"><small>(Définir)</small></a>" ?></td>
                     <td><a href="tel:<?php echo formatPhoneCallTo($call['callerPhone']) ?>"><?php echo formatPhone($call['callerPhone'], true) ?></a></td>
-                    <td><?php echo $call['statusText'] ?><?php if ($call['calledPhone']): ?> <small class="text-muted">par <?php echo ($call['calledName']) ? $call['calledName'] : formatPhone($call['calledPhone'], true) ?></small><?php endif; ?></td>
+                    <td><?php echo $call['statusText'] ?><?php if ($call['calledPhone']): ?> <small class="text-muted">par <?php echo ($call['calledName']) ? $call['calledName'] : formatPhone($call['calledPhone'], true) ?></small><?php endif; ?> <i class="<?php echo $call['icon']; ?> float-right"></i></td>
                     <td class="text-right"><?php if($call['duration']): ?><?php echo $call['durationMin'] ?>&nbsp;<small class=text-muted>min</small> <?php echo sprintf("%02d", $call['durationSec']) ?>&nbsp;<small class=text-muted>sec</small><?php endif; ?></td>
                 </tr>
                 <?php endforeach; ?>
