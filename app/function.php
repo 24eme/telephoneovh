@@ -64,7 +64,7 @@ function buildCall($dataCall, $phones) {
     if($dataCall['wayType'] == 'outgoing') {
         $call['status'] = 'EMIS';
         $call['statusText'] = 'Émis';
-        $call['callerPhone'] = $dataCall['dialed'];
+        $call['callerPhone'] = isset($dataCall['dialed']) ? $dataCall['dialed'] : null;
         $call['calledPhone'] = $dataCall['calling'];
     }
 

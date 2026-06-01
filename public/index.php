@@ -73,6 +73,11 @@ foreach($phones as $phone => $name) {
     $tranfertPhoneBook[$phone] = $name;
 }
 
+if(!$cache) {
+  header('Location: ?');
+  exit;
+}
+
 ?>
 <?php if($format == "xml"): ?>
 <?php header('Content-Type: text/xml'); ?>
@@ -104,8 +109,8 @@ foreach($phones as $phone => $name) {
     <link rel="icon" href="favicon.ico" />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-</head>
+    <link rel="stylesheet" href="vendor/bootstrap.min.css?v4.6.2">
+    <link rel="stylesheet" href="vendor/bootstrap-icons.min.css?v1.13.1">
 <body>
     <div class="container" style="margin-top: 20px;">
         <div class="row" style="margin-bottom: 20px;">
@@ -124,6 +129,7 @@ foreach($phones as $phone => $name) {
             </form>
             </div>
             <div class="col-3 text-right">
+                <a class="btn btn-link btn-sm text-info" href="?cache=reload" title="Recharger le cache"><i class="bi bi-arrow-clockwise"></i></a>
                 <button type="button" autofocus=autofocus class="btn btn-info my-1" data-toggle="modal" data-target="#modalPhoneBook">Carnet de contacts</button>
             </div>
         </div>

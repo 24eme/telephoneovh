@@ -2,3 +2,4 @@ bin/composer.phar
 ./composer.lock
 ./composer.json
 app/config.php
+cache/
