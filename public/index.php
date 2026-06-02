@@ -179,7 +179,13 @@ if(!$cache) {
                 <?php foreach($calls as $call): ?>
                 <tr>
                     <td><?php echo $call['dateObject']->format('d/m/Y H:i:s') ?></td>
-                    <td><?php echo ($call['callerName']) ? $call['callerName'] : "<span class='text-muted'>Inconnu</span> <button class=\"btn btn-sm btn-light\" type=\"button\" data-toggle=\"modal\" data-target=\"#modalContactCreation\" data-phone=\"".$call['callerPhone']."\">Définir</a>" ?></td>
+                    <td>
+                      <?php if($call['callerName']): ?>
+                        <?php echo $call['callerName'] ?>
+                      <?php else: ?>
+                        <span class='text-muted'>Inconnu</span> <button class="btn btn-sm btn-light" style="padding: 0.10rem 0.25rem; font-size: 0.75rem;" type="button" data-toggle="modal" data-target="#modalContactCreation" data-phone="<?php echo $call['callerPhone'] ?>">Créer un contact</button>
+                        <?php endif; ?>
+                      </td>
                     <td><a href="tel:<?php echo formatPhoneCallTo($call['callerPhone']) ?>"><?php echo formatPhone($call['callerPhone'], true) ?></a></td>
                     <td class="<?php echo $call['color'] ?>"><?php echo $call['statusText'] ?> <?php if ($call['statusTextInfo']): ?><small class="text-muted"><?php echo $call['statusTextInfo'] ?></small><?php endif; ?> <i class="<?php echo $call['icon']; ?> float-right"></i></td>
                     <td class="text-right"><?php if($call['duration']): ?><?php echo $call['durationMin'] ?>&nbsp;<small class=text-muted>min</small> <?php echo sprintf("%02d", $call['durationSec']) ?>&nbsp;<small class=text-muted>sec</small><?php endif; ?></td>
