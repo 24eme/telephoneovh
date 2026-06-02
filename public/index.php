@@ -93,6 +93,7 @@ if(!$cache) {
     <?php if(!$call['callerName']): continue; endif; ?>
     <?php if($call['status'] == 'MANQUE'): continue; endif; ?>
     <?php if($call['status'] == 'VOICEMAIL'): continue; endif; ?>
+    <?php if(!$call['duration']): continue; endif; ?>
     <entry>
     <title>Appel <?php echo $call['statusText'] ?> <?php echo ($call['status'] == 'EMIS') ? 'vers' : 'de' ?> <?php echo (isset($call['callerName'])) ? $call['callerName'] : formatPhoneCallTo($call['callerPhone']) ?> par <?php echo (isset($call['calledName'])) ? $call['calledName'] : formatPhoneCallTo($call['callerPhone']) ?><?php if($call['duration']): ?> d'une durée de <?php echo $call['durationMin'] ?> min et <?php echo $call['durationSec'] ?> sec<?php endif; ?></title>
 		<link href="<?php echo $link ?>" />
