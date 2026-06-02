@@ -11,6 +11,7 @@ if (isset($_GET['cache'])) {
     $cache = false;
 }
 $phones = array();
+$phonebookGroups = array();
 $calls = array();
 $account = $config['ovhAccount'];
 $service = $config['ovhService'];
@@ -34,6 +35,8 @@ foreach(explode("\n", getPhoneBookCsv($api, $config, ($cache) ? 86400 * 7 : 0 /*
     if($data[6]) {
         $phones[$data[6]] = $name;
     }
+
+    $phonebookGroups[$data[0]] = $data[0];
 }
 
 asort($phones);
@@ -74,7 +77,7 @@ foreach($phones as $phone => $name) {
 }
 
 if(!$cache) {
-  header('Location: ?');
+  header('Location: index.php');
   exit;
 }
 
@@ -176,13 +179,66 @@ if(!$cache) {
                 <?php foreach($calls as $call): ?>
                 <tr>
                     <td><?php echo $call['dateObject']->format('d/m/Y H:i:s') ?></td>
-                    <td><?php echo ($call['callerName']) ? $call['callerName'] : "<span class='text-muted'>Inconnu</span> <a href=\"https://www.ovhtelecom.fr/manager/#/telecom/telephony/".$account."/phonebook\" target=\"_blank\"><small>(Définir)</small></a>" ?></td>
+                    <td><?php echo ($call['callerName']) ? $call['callerName'] : "<span class='text-muted'>Inconnu</span> <button class=\"btn btn-sm btn-light\" type=\"button\" data-toggle=\"modal\" data-target=\"#modalContactCreation\" data-phone=\"".$call['callerPhone']."\">Définir</a>" ?></td>
                     <td><a href="tel:<?php echo formatPhoneCallTo($call['callerPhone']) ?>"><?php echo formatPhone($call['callerPhone'], true) ?></a></td>
                     <td class="<?php echo $call['color'] ?>"><?php echo $call['statusText'] ?> <?php if ($call['statusTextInfo']): ?><small class="text-muted"><?php echo $call['statusTextInfo'] ?></small><?php endif; ?> <i class="<?php echo $call['icon']; ?> float-right"></i></td>
                     <td class="text-right"><?php if($call['duration']): ?><?php echo $call['durationMin'] ?>&nbsp;<small class=text-muted>min</small> <?php echo sprintf("%02d", $call['durationSec']) ?>&nbsp;<small class=text-muted>sec</small><?php endif; ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
+
+            <div id="modalContactCreation" class="modal" tabindex="-1">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Créér un contact</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="formCreateContact" action="createcontact.php" method="POST">
+                      <div class="form-group row">
+                        <label for="inputContactName" class="col-sm-5 col-form-label ">Prénom</label>
+                        <div class="col-sm-6">
+                          <input type="name" name="name" required class="form-control" id="inputContactName">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputContactSurname" class="col-sm-5 col-form-label ">Nom</label>
+                        <div class="col-sm-6">
+                          <input type="inputContactSurname" required name="surname" class="form-control" id="inputContactSurname">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputContactGroup" class="col-sm-5 col-form-label ">Nom de l'organisation</label>
+                        <div class="col-sm-6">
+                          <input type="name" name="group" required list="phonebookGroups" class="form-control" id="inputContactGroup">
+                          <datalist id="phonebookGroups">
+                            <?php foreach($phonebookGroups as $phonebookGroup): ?>
+                              <option value="<?php echo $phonebookGroup ?>">
+                            <?php endforeach; ?>
+                          </datalist>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputContactWorkPhone" class="col-sm-5 col-form-label ">N° de Téléphone</label>
+                        <div class="col-sm-6">
+                          <input type="name" name="workPhone" required class="form-control" id="inputContactWorkPhone" placeholder="">
+                        </div>
+                      </div>
+                      <input type="hidden" name="homeMobile">
+                      <input type="hidden" name="homePhone">
+                      <input type="hidden" name="workMobile">
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" form="formCreateContact" class="btn btn-primary">Créer</button>
+                  </div>
+                </div>
+              </div>
+            </div>
         </table>
     </body>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
@@ -222,6 +278,15 @@ if(!$cache) {
                 line.classList.remove("d-none");
             });
         })
+        $('#modalContactCreation').on('shown.bs.modal', function (e) {
+            document.querySelectorAll('#modalContactCreation input').forEach(function(item) { item.value = null; });
+            document.getElementById('inputContactName').focus();
+            document.getElementById('inputContactWorkPhone').value = e.relatedTarget.dataset.phone;
+        })
+        $('#modalContactCreation').on('hidden.bs.modal', function (e) {
+            document.querySelectorAll('#modalContactCreation input').forEach(function(item) { item.value = null; });
+        })
+
     </script>
 </html>
 <?php endif; ?>
