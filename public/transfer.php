@@ -20,6 +20,7 @@ if($transferNumber) {
 } else {
     $result = $api->put('/telephony/'.$account.'/line/'.$service.'/options', array(
         'forwardUnconditional' => false,
+        'forwardUnconditionalNumber' => "",
     ));
 }
 
