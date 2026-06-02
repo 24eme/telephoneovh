@@ -99,7 +99,7 @@ function buildCall($dataCall, $phones, $config) {
     $call['callerName'] = resolvePhoneName($call['callerPhone'], $phones);
     $call['calledName'] = resolvePhoneName($call['calledPhone'], $phones);
 
-    if(!isset($call['statusTextInfo']) && $call['statusTextInfo'] && $call['calledPhone']) {
+    if((!isset($call['statusTextInfo']) || !$call['statusTextInfo']) && $call['calledPhone']) {
       $call['statusTextInfo'] = "par ".(($call['calledName']) ? $call['calledName'] : formatPhone($call['calledPhone'], true));
     }
 
