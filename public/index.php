@@ -90,10 +90,10 @@ if(!$cache) {
 <feed xmlns="http://www.w3.org/2005/Atom">
 	<title>Historique des derniers appels</title>
     <?php foreach($calls as $call): ?>
-    <?php if(!$call['callerName']): continue; endif; ?>
-    <?php if($call['status'] == 'MANQUE'): continue; endif; ?>
-    <?php if($call['status'] == 'VOICEMAIL'): continue; endif; ?>
-    <?php if(!$call['duration']): continue; endif; ?>
+    <?php if(isset($_GET['filterSuccess']) && !$call['callerName']): continue; endif; ?>
+    <?php if(isset($_GET['filterSuccess']) && $call['status'] == 'MANQUE'): continue; endif; ?>
+    <?php if(isset($_GET['filterSuccess']) && $call['status'] == 'VOICEMAIL'): continue; endif; ?>
+    <?php if(isset($_GET['filterSuccess']) && !$call['duration']): continue; endif; ?>
     <entry>
     <title>Appel <?php echo $call['statusText'] ?> <?php echo ($call['status'] == 'EMIS') ? 'vers' : 'de' ?> <?php echo (isset($call['callerName'])) ? $call['callerName'] : formatPhoneCallTo($call['callerPhone']) ?><?php if($call['duration']): ?> d'une durée de <?php echo $call['durationMin'] ?> min et <?php echo $call['durationSec'] ?> sec<?php endif; ?></title>
 		<link href="<?php echo $link ?>" />
